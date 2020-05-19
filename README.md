@@ -10,6 +10,10 @@ Install Typescript compliler: `npm i -g typescript ts-node`
 
 `ts-node index.ts` combines these two commands `tsc index.ts` and `node index.js` (`tsc` is typescript compiler)
 
+`npm i -g parcel-bundler` tool to help run Typescript in the browser
+
+`parcel index.html` parcel will look at the script tag inside index.html, see the index.ts, it'll convert it into JS and change the script src to the JS file
+
 # Reusable Code in TS
 
 <img src="screenshots/reusable-code-2.png" width=550>
