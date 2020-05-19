@@ -478,3 +478,48 @@ if (typeof collection === 'string') {collection will have all methods that a str
 ## INTERFACES VS INHERITANCE (Abstract Classes)
 
 <img src="screenshots/interface-vs-abstract-class.png" width=550>
+
+## ENUMS - enumeration (TYPE)
+
+**Why do we use `enum` over a normal JS object?** The main purpose of an enum is to signal other engineers that this is a collection of very closely related values.
+
+We can also use enum as a type.
+
+**When to use it?** Use whenever we have a small fixed set of values that are all closely realted and known at compile time
+
+```ts
+// A small fixed set of possible outcome of a football match
+enum MatchResult {
+  HomeWin = 'H',
+  AwayWin = 'A',
+  Draw = 'D',
+}
+
+console.log(MatchResult.HomeWin);
+```
+
+## GENERICS
+
+- Like function arguments, but for types in class/function definitions
+- Allows us to define the type of a property/argument/return value at a future point
+- Used heavily when writing reusable code
+
+```ts
+class holdAnything<T> {
+  data: T;
+}
+
+const holdNumber = new holdAnything<number>();
+holdNumber.data = 123;
+
+const holdString = new holdAnything<string>();
+holdString.data = 'something';
+```
+
+## COMPOSITION
+
+- Delegation is one way of making composition very powerful.
+
+- Instead of making class Window a subclass of Rectangle, the Window class might reuse the behavior of Rectangle by keeping a Rectangle instance variable and delegating Rectangle-specific behavior into it. In other words, instead of a Window being a Rectangle, it would HAVE a Rectangle. Window must now forward requests to its Rectangle instance explicitly, whereas before, it would have inherited those operations.
+
+  <img src="screenshots/composition.png" width=700>
