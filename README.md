@@ -6,9 +6,49 @@
 
 <img src="screenshots/ts-intro-3.png" width=550>
 
+## To work with NodeJS engine
+
 Install Typescript compliler: `npm i -g typescript ts-node`
 
 `ts-node index.ts` combines these two commands `tsc index.ts` and `node index.js` (`tsc` is typescript compiler)
+
+- ### Build process (Compilation)
+
+  `tsc index.ts`: By default, tsc will build a `index.js` and put it at the root directory. To change the directory, we need to change it in a Typescript config file
+
+  `tsc --init`: create a `tsconfig.json` file for the project.
+
+  In `tsconfig.json`:
+
+  - Change the directory for the output file of compiling index.ts to index.js: `"outDir": "./build"`
+  - Change the root (working) directory by: `"rootDir": "./src"`
+
+  In the terminal, at the main project folder directory (ex: 4-sort, not src folder or the build folder):
+
+  - To compile index.js file, we only need to type `tsc` in the command line
+  - To not having to run `tsc` manually everytime we make any changes in the root directory, we can run `tsc -w` for it to keep watching for saved changes the root directory and recompile automatically.
+
+- ### Execution
+
+  `node build/index.js`
+
+- ### Concurrent Compilation and Execution
+
+  - Use npm as project manager `npm init`
+  - Install 2 npm packages: `nodemon` and `concurrently`
+  - Write scripts in package.json:
+
+    ```json
+    "scripts": {
+      "start:build": "tsc -w",
+      "start:run": "nodemon build/index.js",
+      "start": "concurrently npm:start:*"
+    }
+    ```
+
+  - In terminal, main project foler, run `npm start`
+
+## To work in the browser
 
 `npm i -g parcel-bundler` tool to help run Typescript in the browser
 
@@ -21,6 +61,10 @@ Install Typescript compliler: `npm i -g typescript ts-node`
 <img src="screenshots/reusable-code-1.png" width=550>
 
 <img src="screenshots/reusable-code-3.png" width=550>
+
+<img src="screenshots/reusable-code-4.png" width=550>
+
+<img src="screenshots/reusable-code-5.png" width=550>
 
 # FEATURES & SYNTAX
 
@@ -278,6 +322,26 @@ Install Typescript compliler: `npm i -g typescript ts-node`
   const tea: Drink = ['black', false, 0];
   ```
 
+## TYPE GUARDS
+
+When a type annotation is a union of 2 different types like
+
+```ts
+collection: number[] | string
+```
+
+`collection` now only has access to common methods that both an array of numbers and a string have. (side note: TS is very smart, for method like accessing and editing an element by index, it knows string is immutable so collection now can only read an element by index but not editing it by index).
+
+To restore all methods of `number[]` or `string` on collection, we use type guards by:
+
+```ts
+if (collection instanceof Array) { collection will have all methods that an array has }
+if (typeof collection === 'string') {collection will have all methods that a string has}
+```
+
+- `typeof`: (Narrow type of a value to a primitive type) works for `number`, `string`, `boolean`, `symbol`
+- `instanceof`: (Narrow down every other type of value) Every other value that is created with a constructor function
+
 ## INTERFACE
 
 - ### Definition
@@ -410,3 +474,7 @@ Install Typescript compliler: `npm i -g typescript ts-node`
 
   const car = new Car(4, 'red');
   ```
+
+## INTERFACES VS INHERITANCE (Abstract Classes)
+
+<img src="screenshots/interface-vs-abstract-class.png" width=550>
