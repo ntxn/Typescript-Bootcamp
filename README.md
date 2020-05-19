@@ -505,15 +505,45 @@ console.log(MatchResult.HomeWin);
 - Used heavily when writing reusable code
 
 ```ts
-class holdAnything<T> {
-  data: T;
+// GENERICS with CLASSES
+class ArrayOfAnything<T> {
+  constructor(public collection: T[]) {}
+
+  get(index: number): T {
+    return this.collection[index];
+  }
 }
 
-const holdNumber = new holdAnything<number>();
-holdNumber.data = 123;
+const strings = new ArrayOfAnything<string>(['a', 'c', 'b']);
 
-const holdString = new holdAnything<string>();
-holdString.data = 'something';
+// GENERICS with FUNCTIONs
+function printAnything<T>(arr: T[]): void {
+  for (let i = 0; i < arr.length; i++) {
+    console.log(arr[i]);
+  }
+}
+
+// TS can refer the type of T based on the arr argument but we should still add the T type so Typescript can help us catch errors
+printAnything<number>([1, 2, 3, 4]);
+printAnything<string>(['a', 'b', 'c']);
+
+// GENERICS CONSTRAINTS
+class House {
+  print() {
+    console.log('I am a house');
+  }
+}
+
+interface Printable {
+  print(): void;
+}
+
+function printHousesOrCars<T extends Printable>(arr: T[]): void {
+  for (let i = 0; i < arr.length; i++) arr[i].print();
+}
+
+printHousesOrCars([1, 3, 4]); // Errors because this array of number doesn't have a print() method
+printHousesOrCars([new House(), new House()]);
 ```
 
 ## COMPOSITION
