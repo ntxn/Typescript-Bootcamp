@@ -564,4 +564,78 @@ export class Attributes<T> {
 
 - Instead of making class Window a subclass of Rectangle, the Window class might reuse the behavior of Rectangle by keeping a Rectangle instance variable and delegating Rectangle-specific behavior into it. In other words, instead of a Window being a Rectangle, it would HAVE a Rectangle. Window must now forward requests to its Rectangle instance explicitly, whereas before, it would have inherited those operations.
 
-  <img src="screenshots/composition.png" width=700>
+  <img src="screenshots/composition.png" width=600>
+
+## DECORATORS
+
+- ### Review on JS Prototypes
+
+  Classes in ES5 and Typescript are syntactic sugar of Prototypal Inheritance
+
+  <img src="screenshots/js-prototype-1.png" width=800>
+
+  Class Boat contains properties like string, array, number, etc and an invisible prototype that will contains all methods belong to Boat
+
+  <img src="screenshots/js-prototype-2.png" width=400>
+
+  Even after instantiation, we can add more method to a class prototypes and all instances (even already created before this change) will have access to the new added method.
+
+  <img src="screenshots/js-prototype-3.png" width=550>
+
+- ### Decorators in Typescript
+
+  <img src="screenshots/decorators-1.png" width=650>
+
+  <img src="screenshots/decorators-2.png" width=650>
+
+  <img src="screenshots/decorators-3.png" width=550>
+
+  `PropertyDescriptor` is an object that has some configuration options around a property defined on an object.
+
+  It is a part of ES5. In TS, it is globally available as `PropertyDescriptor`.
+
+  In the browser, we access it with `Object.getOwnPropertyDescriptor`
+
+  ```js
+  const car = { make: 'honda', year: 2000 };
+  Object.getOwnPropertyDescriptor(car, 'make');
+
+  /* What we get from the property descriptor
+  {
+    value: "honda",
+    writable: true,
+    enumerable: true,
+    configurable: true
+  }
+  */
+
+  // To update a property
+  Object.defineProperty(car, 'make', { writable: false });
+  ```
+
+  An example of using decorator with PropertyDescriptor in TS
+
+  ```ts
+  class Boat {
+    color: string = 'red';
+
+    @logError('OOps, boat was sunk')
+    pilot(speed): void {
+      if (speed === 'fast') console.log('swish');
+      else throw new Error('Error');
+    }
+  }
+
+  function logError(errMessage: string) {
+    return function (target: any, key: string, desc: PropertyDescriptor): void {
+      const method = desc.value;
+      desc.value = function () {
+        try {
+          method();
+        } catch (e) {
+          console.log(errMessage);
+        }
+      };
+    };
+  }
+  ```
