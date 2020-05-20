@@ -546,6 +546,18 @@ printHousesOrCars([1, 3, 4]); // Errors because this array of number doesn't hav
 printHousesOrCars([new House(), new House()]);
 ```
 
+```ts
+// More constraints
+// if T is {name: string; age: number;}, K type is "name" and "age". And eventually, it can be inferred back to the actual type of "name" which is string and "age" which is number
+export class Attributes<T> {
+  constructor(private data: T) {}
+
+  get<K extends keyof T>(key: K): T[K] {
+    return this.data[key];
+  }
+}
+```
+
 ## COMPOSITION
 
 - Delegation is one way of making composition very powerful.
