@@ -639,3 +639,57 @@ export class Attributes<T> {
     };
   }
   ```
+
+## METADATA
+
+<img src="screenshots/metadata-1.png" width=650>
+
+To work with metadata, we have to install npm package `relfect-metadata`
+
+```js
+import 'reflect-metadata'; // this gives us access to Global variable Reflect
+
+const plane = { color: 'red' };
+
+// Metadata on the plane object
+Reflect.defineMetadata('note', 'hi there', plane);
+const note = Reflect.getMetadata('note', plane);
+console.log(note);
+
+// Metadata on the field color of plane object
+Reflect.defineMetadata('note', 'bye there', plane, 'color');
+const note = Reflect.getMetadata('note', plane, 'color');
+console.log(note);
+```
+
+<img src="screenshots/metadata-2.png" width=400>
+<img src="screenshots/metadata-3.png" width=400>
+
+Combine Metadata with Decorator
+
+```ts
+@printMetadata
+class Plane {
+  color: string = 'red';
+
+  @addSecret('Hi there')
+  fly(): void {
+    console.log('vrrrr');
+  }
+}
+
+// This decorator is applied to a method, so the target type it Prototype of Plane
+function addSecret(secretInfo: string) {
+  return function (target: Plane, key: string) {
+    Reflect.defineMetadata('secret', secretInfo, target, key);
+  };
+}
+
+// This decorator is applied to a class, so the target type if the constructor of Plane
+function printMetadata(target: typeof Plane) {
+  for (let key in target.prototype) {
+    const secret = Reflect.getMetadata('secret', target.prototype, key);
+    console.log(secret);
+  }
+}
+```
